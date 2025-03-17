@@ -3,7 +3,7 @@ printf "Pre-Push Hook"init
 
 # Analyze the project
 # change to use `fvm flutter analyze` when using FVM
-flutter analyze
+fvm flutter analyze
 
 if [ $? -ne 0 ]; then
     printf "Issues with Flutter Analyze found, aborting push"
