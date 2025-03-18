@@ -38,3 +38,6 @@ linter:
     # We use 150 line characters
     # This will be setup on the formatter's code editor setups
     lines_longer_than_80_chars: false
+
+# Set the formatter's max line length to 150
+line-length: 150
