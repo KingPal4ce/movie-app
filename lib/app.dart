@@ -11,10 +11,14 @@ import 'package:flutter_intro_bootcamp_project/features/auth/domain/blocs/auth_s
 import 'package:flutter_intro_bootcamp_project/features/auth/domain/repositories/auth_repo.dart';
 import 'package:flutter_intro_bootcamp_project/features/auth/domain/repositories/auth_repo_impl.dart';
 import 'package:flutter_intro_bootcamp_project/features/auth/presentation/screens/auth.dart';
-import 'package:flutter_intro_bootcamp_project/features/home/data/service/home_service.dart';
+import 'package:flutter_intro_bootcamp_project/features/home/data/services/home_service.dart';
 import 'package:flutter_intro_bootcamp_project/features/home/domain/blocs/home_bloc.dart';
 import 'package:flutter_intro_bootcamp_project/features/home/domain/repositories/home_repo.dart';
 import 'package:flutter_intro_bootcamp_project/features/home/domain/repositories/home_repo_impl.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie/data/services/movie_service.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie/domain/blocs/movie_bloc.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie/domain/repositories/movie_repo.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie/domain/repositories/movie_repo_impl.dart';
 import 'package:nested/nested.dart';
 
 class MyApp extends StatelessWidget {
@@ -31,6 +35,9 @@ class MyApp extends StatelessWidget {
     final HomeService homeService = HomeService(apiClient);
     final HomeRepo homeRepo = HomeRepoImpl(homeService);
 
+    final MovieService movieService = MovieService(apiClient);
+    final MovieRepo movieRepo = MovieRepoImpl(movieService);
+
     return MultiBlocProvider(
       providers: <SingleChildWidget>[
         // Auth BLoC
@@ -38,6 +45,9 @@ class MyApp extends StatelessWidget {
 
         // Home BLoC
         BlocProvider<HomeBloc>(create: (BuildContext context) => HomeBloc(homeRepo: homeRepo)),
+
+        // Movie BLoC
+        BlocProvider<MovieBloc>(create: (BuildContext context) => MovieBloc(movieRepo: movieRepo)),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
