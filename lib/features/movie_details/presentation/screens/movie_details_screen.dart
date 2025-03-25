@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_intro_bootcamp_project/core/presentation/screens/navigation_screen.dart';
 import 'package:flutter_intro_bootcamp_project/core/presentation/widgets/media_content_slider.dart';
-import 'package:flutter_intro_bootcamp_project/core/presentation/widgets/trailers_player.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/presentation/widgets/trailers_player.dart';
 import 'package:flutter_intro_bootcamp_project/core/presentation/widgets/user_review.dart';
 import 'package:flutter_intro_bootcamp_project/features/movie/domain/blocs/movie_states.dart';
 import 'package:flutter_intro_bootcamp_project/features/movie_details/domain/blocs/movie_details_bloc.dart';

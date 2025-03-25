@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_intro_bootcamp_project/core/api_dio_client.dart';
-import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_details_model.dart';
 import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_model.dart';
 import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_reviews_model.dart';
 import 'package:flutter_intro_bootcamp_project/core/data/models/trailers_model.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/media_content_details_model.dart';
 
 enum MovieGenre {
   action(28),
