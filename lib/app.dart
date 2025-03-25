@@ -19,6 +19,14 @@ import 'package:flutter_intro_bootcamp_project/features/movie/data/services/movi
 import 'package:flutter_intro_bootcamp_project/features/movie/domain/blocs/movie_bloc.dart';
 import 'package:flutter_intro_bootcamp_project/features/movie/domain/repositories/movie_repo.dart';
 import 'package:flutter_intro_bootcamp_project/features/movie/domain/repositories/movie_repo_impl.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/data/services/movie_details_service.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/domain/blocs/movie_details_bloc.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/domain/repositories/movie_details_repo.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/domain/repositories/movie_details_repo_impl.dart';
+import 'package:flutter_intro_bootcamp_project/features/search/data/services/search_service.dart';
+import 'package:flutter_intro_bootcamp_project/features/search/domain/blocs/search_bloc.dart';
+import 'package:flutter_intro_bootcamp_project/features/search/domain/repositories/search_repo.dart';
+import 'package:flutter_intro_bootcamp_project/features/search/domain/repositories/search_repo_impl.dart';
 import 'package:nested/nested.dart';
 
 class MyApp extends StatelessWidget {
@@ -38,6 +46,12 @@ class MyApp extends StatelessWidget {
     final MovieService movieService = MovieService(apiClient);
     final MovieRepo movieRepo = MovieRepoImpl(movieService);
 
+    final MovieDetailsService movieDetailsService = MovieDetailsService(apiClient);
+    final MovieDetailsRepo movieDetailsRepo = MovieDetailsRepoImpl(movieDetailsService);
+
+    final SearchService searchService = SearchService(apiClient);
+    final SearchRepo searchRepo = SearchRepoImpl(searchService: searchService);
+
     return MultiBlocProvider(
       providers: <SingleChildWidget>[
         // Auth BLoC
@@ -48,6 +62,12 @@ class MyApp extends StatelessWidget {
 
         // Movie BLoC
         BlocProvider<MovieBloc>(create: (BuildContext context) => MovieBloc(movieRepo: movieRepo)),
+
+        // Movie Details BLoC
+        BlocProvider<MovieDetailsBloc>(create: (BuildContext context) => MovieDetailsBloc(movieDetailsRepo: movieDetailsRepo)),
+
+        // Search BLoC
+        BlocProvider<SearchBloc>(create: (BuildContext context) => SearchBloc(searchRepo: searchRepo)),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
