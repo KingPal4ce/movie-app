@@ -36,6 +36,9 @@ migrate_working_dir/
 .pub/
 /build/
 
+# Ignore generated JSON serialization files
+*.g.dart
+
 # Symbolication related
 app.*.symbols
 
