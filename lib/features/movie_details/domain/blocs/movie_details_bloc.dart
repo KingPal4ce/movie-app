@@ -1,8 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_model.dart';
-import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_reviews_model.dart';
-import 'package:flutter_intro_bootcamp_project/core/data/models/trailers_model.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/cast_member_model.dart';
 import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/media_content_details_model.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/media_content_reviews_model.dart';
+// import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/media_content_reviews_model.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/trailers_model.dart';
 import 'package:flutter_intro_bootcamp_project/features/movie_details/domain/blocs/movie_details_states.dart';
 import 'package:flutter_intro_bootcamp_project/features/movie_details/domain/repositories/movie_details_repo.dart';
 
@@ -15,84 +17,17 @@ class MovieDetailsBloc extends Cubit<MovieDetailsStates> {
   List<MediaContentModel>? _similarMovies;
   List<MediaContentModel>? _recommendedMovies;
   List<Map<String, dynamic>>? _reviews;
-
-  Future<void> fetchTrailers(int movieId) async {
-    try {
-      emit(MovieDetailsLoading());
-      _trailers = await movieDetailsRepo.fetchTrailers(movieId);
-      emit(
-        MovieDetailsLoaded(
-          movieDetails: _movieDetails,
-          trailers: _trailers,
-          similarMovies: _similarMovies,
-          recommendedMovies: _recommendedMovies,
-          reviews: _reviews,
-        ),
-      );
-    } catch (e) {
-      emit(MovieDetailsError('$e'));
-    }
-  }
-
-  Future<void> fetchSimilarMovies(int movieId) async {
-    try {
-      emit(MovieDetailsLoading());
-      _similarMovies = await movieDetailsRepo.fetchSimilarMovies(movieId);
-      emit(
-        MovieDetailsLoaded(
-          movieDetails: _movieDetails,
-          trailers: _trailers,
-          similarMovies: _similarMovies,
-          recommendedMovies: _recommendedMovies,
-          reviews: _reviews,
-        ),
-      );
-    } catch (e) {
-      emit(MovieDetailsError('$e'));
-    }
-  }
-
-  Future<void> fetchRecommendedMovies(int movieId) async {
-    try {
-      emit(MovieDetailsLoading());
-      _recommendedMovies = await movieDetailsRepo.fetchRecommendedMovies(movieId);
-      emit(
-        MovieDetailsLoaded(
-          movieDetails: _movieDetails,
-          trailers: _trailers,
-          similarMovies: _similarMovies,
-          recommendedMovies: _recommendedMovies,
-          reviews: _reviews,
-        ),
-      );
-    } catch (e) {
-      emit(MovieDetailsError('$e'));
-    }
-  }
+  List<CastMemberModel>? _castMembers;
 
   Future<void> fetchMovieDetails(int movieId) async {
     try {
       emit(MovieDetailsLoading());
+      _trailers = await movieDetailsRepo.fetchTrailers(movieId);
       _movieDetails = await movieDetailsRepo.fetchMovieDetails(movieId);
-      emit(
-        MovieDetailsLoaded(
-          movieDetails: _movieDetails,
-          trailers: _trailers,
-          similarMovies: _similarMovies,
-          recommendedMovies: _recommendedMovies,
-          reviews: _reviews,
-        ),
-      );
-    } catch (e) {
-      emit(MovieDetailsError('$e'));
-    }
-  }
-
-  Future<void> fetchUserReviews(int movieId) async {
-    try {
-      emit(MovieDetailsLoading());
+      _similarMovies = await movieDetailsRepo.fetchSimilarMovies(movieId);
+      _recommendedMovies = await movieDetailsRepo.fetchRecommendedMovies(movieId);
+      _castMembers = await movieDetailsRepo.fetchCastMember(movieId);
       final List<Review> reviewsList = await movieDetailsRepo.fetchUserReviews(movieId);
-
       _reviews =
           reviewsList
               .map(
@@ -114,10 +49,11 @@ class MovieDetailsBloc extends Cubit<MovieDetailsStates> {
           similarMovies: _similarMovies,
           recommendedMovies: _recommendedMovies,
           reviews: _reviews,
+          castMembers: _castMembers ?? <CastMemberModel>[],
         ),
       );
     } catch (e) {
-      emit(MovieDetailsError('Failed to fetch reviews: $e'));
+      emit(MovieDetailsError('$e'));
     }
   }
 }
