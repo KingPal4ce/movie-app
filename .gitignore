@@ -38,6 +38,7 @@ migrate_working_dir/
 
 # Ignore generated JSON serialization files
 *.g.dart
+*.gr.dart
 
 # Symbolication related
 app.*.symbols
