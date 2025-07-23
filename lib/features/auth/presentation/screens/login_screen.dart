@@ -21,6 +21,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  late AuthBloc authBloc;
+
+  @override
+  void initState() {
+    // auth bloc
+    authBloc = context.read<AuthBloc>();
+    super.initState();
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -34,9 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!isValid) {
       return;
     }
-
-    // auth bloc
-    final AuthBloc authBloc = context.read<AuthBloc>();
 
     FocusScope.of(context).unfocus();
 
@@ -124,7 +130,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     GoogleButton(
                       onTap: () {
                         try {
-                          final AuthBloc authBloc = context.read<AuthBloc>();
                           authBloc.googleLogin();
                         } catch (e) {
                           throw Exception('$e');
