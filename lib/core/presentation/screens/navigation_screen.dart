@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intro_bootcamp_project/features/home/presentation/screens/home_screen.dart';
 import 'package:flutter_intro_bootcamp_project/features/movie/presentation/screens/movies_screen.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_intro_bootcamp_project/features/search/presentation/scre
 import 'package:flutter_intro_bootcamp_project/features/settings/presentation/screens/settings_screen.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
+@RoutePage()
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
 
@@ -31,12 +33,11 @@ class _NavigationScreenState extends State<NavigationScreen> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
             child: GNav(
-              color: Colors.white,
-              activeColor: Colors.white,
-              tabBackgroundColor: Colors.grey.shade800,
+              tabBackgroundColor: Theme.of(context).colorScheme.surface,
               gap: 8,
               padding: EdgeInsets.all(16),
               onTabChange: _navigateBottomBar,
+              color: Colors.white,
               tabs: const <GButton>[
                 GButton(icon: Icons.home, text: 'Home'),
                 GButton(icon: Icons.movie, text: 'Movies'),
