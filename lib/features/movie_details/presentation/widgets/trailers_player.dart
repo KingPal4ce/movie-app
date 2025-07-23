@@ -19,7 +19,7 @@ class _TrailersPlayerState extends State<TrailersPlayer> {
     _trailerController = YoutubePlayerController.fromVideoId(
       videoId: widget.trailerId,
       autoPlay: true,
-      params: const YoutubePlayerParams(showControls: false),
+      params: const YoutubePlayerParams(showControls: false, loop: true, enableCaption: true),
     );
   }
 
