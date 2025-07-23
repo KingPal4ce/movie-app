@@ -9,31 +9,47 @@ class AuthRepoImpl implements AuthRepo {
 
   @override
   Future<AppUser?> loginWithEmailPassword(String email, String password) async {
-    final User? user = await _authService.signInWithEmailPassword(email, password);
-    if (user == null) return null;
+    try {
+      final User? user = await _authService.signInWithEmailPassword(email, password);
+      if (user == null) return null;
 
-    return AppUser(uid: user.id, email: user.email!, name: '');
+      return AppUser(uid: user.id, email: user.email!, name: '');
+    } catch (e) {
+      throw Exception('Error in AuthRepoImpl (loginWithEmailPassword): $e');
+    }
   }
 
   @override
   Future<AppUser?> registerWithEmailPassword(String name, String email, String password) async {
-    final User? user = await _authService.signUpWithEmailPassword(name, email, password);
-    if (user == null) return null;
+    try {
+      final User? user = await _authService.signUpWithEmailPassword(name, email, password);
+      if (user == null) return null;
 
-    return AppUser(uid: user.id, email: user.email!, name: name);
+      return AppUser(uid: user.id, email: user.email!, name: name);
+    } catch (e) {
+      throw Exception('Error in AuthRepoImpl (registerWithEmailPassword): $e');
+    }
   }
 
   @override
   Future<void> logout() async {
-    await _authService.signOut();
+    try {
+      await _authService.signOut();
+    } catch (e) {
+      throw Exception('Error in AuthRepoImpl (logout): $e');
+    }
   }
 
   @override
   Future<AppUser?> getCurrentUser() async {
-    final User? user = await _authService.getCurrentUser();
-    if (user == null) return null;
+    try {
+      final User? user = await _authService.getCurrentUser();
+      if (user == null) return null;
 
-    return AppUser(uid: user.id, email: user.email!, name: '');
+      return AppUser(uid: user.id, email: user.email!, name: '');
+    } catch (e) {
+      throw Exception('Error in AuthRepoImpl (getCurrentUser): $e');
+    }
   }
 
   @override
@@ -51,7 +67,7 @@ class AuthRepoImpl implements AuthRepo {
 
       return AppUser(uid: user.id, email: user.email ?? '', name: name);
     } catch (e) {
-      throw Exception('Error in AuthRepoImpl (signInWithGoogle): ${e.toString()}');
+      throw Exception('Error in AuthRepoImpl (signInWithGoogle): $e');
     }
   }
 }
