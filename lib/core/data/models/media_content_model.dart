@@ -19,4 +19,9 @@ class MediaContentModel {
 
   // convert media content -> json
   Map<String, dynamic> toJson() => _$MediaContentModelToJson(this);
+
+  String? get fullPosterPath {
+    if (posterPath == null) return null;
+    return 'https://image.tmdb.org/t/p/w500$posterPath';
+  }
 }
