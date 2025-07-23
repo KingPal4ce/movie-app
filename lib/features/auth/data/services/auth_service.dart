@@ -1,9 +1,12 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_intro_bootcamp_project/features/auth/data/models/app_user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final SupabaseClient supabase = Supabase.instance.client;
+  final String webClientId = dotenv.env['WEB_CLIENT_ID'] ?? '';
+  final String iosClientId = dotenv.env['IOS_CLIENT_ID'] ?? '';
 
   Future<User?> signInWithEmailPassword(String email, String password) async {
     try {
@@ -16,24 +19,13 @@ class AuthService {
 
   Future<User?> signInWithGoogle() async {
     try {
-      const String webClientId = '853198079561-2rp455uaqmn76q89cq65jeh7vfjgu685.apps.googleusercontent.com';
-      const String iosClientId = '853198079561-lhmcknrtq0b4omuc4n33eeq0ijkm4igd.apps.googleusercontent.com';
+      final GoogleSignIn googleSignIn = GoogleSignIn(clientId: iosClientId, serverClientId: webClientId);
 
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-        clientId: iosClientId,
-        serverClientId: webClientId,
-        // Add these configurations
-        signInOption: SignInOption.standard, // Always show account picker
-        forceCodeForRefreshToken: true, // Optional but recommended
-      );
-
-      // Add this line to force account selection
-      await googleSignIn.signOut(); // This clears any cached account selection
-
+      // reset selected email
+      await googleSignIn.signOut();
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) return null;
 
-      // Rest of your existing code...
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final String? accessToken = googleAuth.accessToken;
       final String? idToken = googleAuth.idToken;
