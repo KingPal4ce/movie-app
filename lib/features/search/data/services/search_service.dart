@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_intro_bootcamp_project/core/api_dio_client.dart';
+import 'package:flutter_intro_bootcamp_project/core/data/api_dio_client.dart';
 import 'package:flutter_intro_bootcamp_project/features/search/data/models/media_content_search_model.dart';
 
 class SearchService {
