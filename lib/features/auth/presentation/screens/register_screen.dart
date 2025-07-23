@@ -23,6 +23,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
+  late AuthBloc authBloc;
+
+  @override
+  void initState() {
+    authBloc = context.read<AuthBloc>();
+    super.initState();
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -38,9 +46,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!isValid) {
       return;
     }
-
-    // auth bloc
-    final AuthBloc authBloc = context.read<AuthBloc>();
 
     FocusScope.of(context).unfocus();
 
@@ -162,7 +167,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // GOOGLE LOGIN BUTTON
                     GoogleButton(
                       onTap: () {
-                        final AuthBloc authBloc = context.read<AuthBloc>();
                         authBloc.googleLogin();
                       },
                     ),
