@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_intro_bootcamp_project/core/api_dio_client.dart';
+import 'package:flutter_intro_bootcamp_project/core/data/api_dio_client.dart';
 import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_model.dart';
 
 class HomeService {
@@ -11,7 +11,7 @@ class HomeService {
 
   Future<List<MediaContentModel>> fetchTrendingWeek() async {
     try {
-      final Response<dynamic> response = await apiClient.get('trending/all/week?api_key=$apiKey');
+      final Response<dynamic> response = await apiClient.get('trending/movie/week?api_key=$apiKey');
       if (response.statusCode == 200 && response.data != null) {
         List<dynamic> trendingWeekJson = response.data!['results'];
         return trendingWeekJson.map((dynamic item) => MediaContentModel.fromJson(item)).toList();
@@ -25,7 +25,7 @@ class HomeService {
 
   Future<List<MediaContentModel>> fetchTrendingDay() async {
     try {
-      final Response<dynamic> response = await apiClient.get('trending/all/day?api_key=$apiKey');
+      final Response<dynamic> response = await apiClient.get('trending/movie/day?api_key=$apiKey');
       if (response.statusCode == 200 && response.data != null) {
         List<dynamic> trendingDayJson = response.data!['results'];
         return trendingDayJson.map((dynamic item) => MediaContentModel.fromJson(item)).toList();
