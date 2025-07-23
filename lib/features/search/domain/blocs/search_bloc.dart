@@ -18,7 +18,6 @@ class SearchBloc extends Cubit<SearchStates> {
       emit(SearchLoaded(searchData: searchData));
     } catch (e) {
       emit(SearchError('Failed to fetch search results'));
-      throw Exception('Error in SearchBloc (fetchSearchResults): $e');
     }
   }
 }
