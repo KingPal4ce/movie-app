@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_intro_bootcamp_project/features/auth/data/models/app_user.dart';
-import 'package:flutter_intro_bootcamp_project/features/auth/domain/blocs/auth_state.dart';
+import 'package:flutter_intro_bootcamp_project/features/auth/domain/blocs/auth_states.dart';
 import 'package:flutter_intro_bootcamp_project/features/auth/domain/repositories/auth_repo.dart';
 
-class AuthBloc extends Cubit<AuthState> {
+class AuthBloc extends Cubit<AuthStates> {
   AuthBloc({required this.authRepo}) : super(AuthInitial());
   final AuthRepo authRepo;
   AppUser? _currentUser;
