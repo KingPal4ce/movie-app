@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_intro_bootcamp_project/core/api_dio_client.dart';
+import 'package:flutter_intro_bootcamp_project/core/data/api_dio_client.dart';
 import 'package:flutter_intro_bootcamp_project/core/presentation/themes/dark_mode.dart';
 import 'package:flutter_intro_bootcamp_project/core/presentation/themes/light_mode.dart';
 import 'package:flutter_intro_bootcamp_project/core/presentation/screens/navigation_screen.dart';
 import 'package:flutter_intro_bootcamp_project/features/auth/data/services/auth_service.dart';
 import 'package:flutter_intro_bootcamp_project/features/auth/domain/blocs/auth_bloc.dart';
-import 'package:flutter_intro_bootcamp_project/features/auth/domain/blocs/auth_state.dart';
+import 'package:flutter_intro_bootcamp_project/features/auth/domain/blocs/auth_states.dart';
 import 'package:flutter_intro_bootcamp_project/features/auth/domain/repositories/auth_repo.dart';
 import 'package:flutter_intro_bootcamp_project/features/auth/domain/repositories/auth_repo_impl.dart';
 import 'package:flutter_intro_bootcamp_project/features/auth/presentation/screens/auth.dart';
@@ -75,25 +75,28 @@ class MyApp extends StatelessWidget {
         darkTheme: darkMode,
         themeMode: ThemeMode.system,
         title: 'Movie App',
-        home: BlocConsumer<AuthBloc, AuthState>(
-          builder: (BuildContext context, AuthState authState) {
+        home: BlocConsumer<AuthBloc, AuthStates>(
+          builder: (BuildContext context, AuthStates state) {
+            // loading...
+            if (state is AuthLoading) {
+              return const Scaffold(body: Center(child: CircularProgressIndicator()));
+            }
+
             // unauthenticated -> auth screen (login/register)
-            if (authState is Unauthenticated) {
+            if (state is Unauthenticated) {
               return const AuthScreen();
             }
 
             // authenticated -> home screen
-            if (authState is Authenticated) {
+            if (state is Authenticated) {
               return const NavigationScreen();
-            }
-            // loading..
-            else {
-              return const Scaffold(body: Center(child: CircularProgressIndicator()));
+            } else {
+              return const Scaffold(body: Center(child: Text('Something Went Wrong...')));
             }
           },
 
           // listen for errors..
-          listener: (BuildContext context, AuthState state) {
+          listener: (BuildContext context, AuthStates state) {
             if (state is AuthError) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
             }
