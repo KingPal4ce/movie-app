@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_intro_bootcamp_project/core/api_dio_client.dart';
+import 'package:flutter_intro_bootcamp_project/core/data/api_dio_client.dart';
 import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_model.dart';
-import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_reviews_model.dart';
-import 'package:flutter_intro_bootcamp_project/core/data/models/trailers_model.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/cast_member_model.dart';
 import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/media_content_details_model.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/media_content_reviews_model.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/trailers_model.dart';
 
 class MovieDetailsService {
   MovieDetailsService(this.apiClient);
@@ -82,6 +83,20 @@ class MovieDetailsService {
       }
     } catch (e) {
       throw Exception('Error fetching movie user reviews data: $e');
+    }
+  }
+
+  Future<List<CastMemberModel>> fetchCastMember(int id) async {
+    try {
+      final Response<dynamic> response = await apiClient.get('movie/$id/credits?api_key=$apiKey');
+      if (response.statusCode == 200 && response.data != null) {
+        List<dynamic> castMemberJson = response.data!['cast'];
+        return castMemberJson.map((dynamic item) => CastMemberModel.fromJson(item)).toList();
+      } else {
+        throw Exception('Failed to fetch cast members data');
+      }
+    } catch (e) {
+      throw Exception('Error fetching cast members data: $e');
     }
   }
 }
