@@ -1,7 +1,8 @@
 import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_model.dart';
-import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_reviews_model.dart';
-import 'package:flutter_intro_bootcamp_project/core/data/models/trailers_model.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/cast_member_model.dart';
 import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/media_content_details_model.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/media_content_reviews_model.dart';
+import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/trailers_model.dart';
 import 'package:flutter_intro_bootcamp_project/features/movie_details/data/services/movie_details_service.dart';
 import 'package:flutter_intro_bootcamp_project/features/movie_details/domain/repositories/movie_details_repo.dart';
 
@@ -51,6 +52,15 @@ class MovieDetailsRepoImpl implements MovieDetailsRepo {
       return await movieDetailsService.fetchMovieDetails(id);
     } catch (e) {
       throw Exception('Error in MovieDetailsRepoImpl (fetchMovieDetails): $e');
+    }
+  }
+
+  @override
+  Future<List<CastMemberModel>> fetchCastMember(int id) async {
+    try {
+      return await movieDetailsService.fetchCastMember(id);
+    } catch (e) {
+      throw Exception('Error in MovieDetailsRepoImpl (fetchCastMember): $e');
     }
   }
 }
