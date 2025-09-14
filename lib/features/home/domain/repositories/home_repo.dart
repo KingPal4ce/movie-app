@@ -1,4 +1,4 @@
-import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_model.dart';
+import 'package:movie_app/core/data/models/media_content_model.dart';
 
 abstract class HomeRepo {
   Future<List<MediaContentModel>> fetchTrendingWeek();

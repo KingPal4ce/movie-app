@@ -1,22 +1,15 @@
-import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_model.dart';
-import 'package:flutter_intro_bootcamp_project/features/movie/data/services/movie_service.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:movie_app/core/data/models/media_content_model.dart';
+import 'package:movie_app/features/movie/data/services/movie_service.dart';
 
-abstract class MovieStates {}
+part 'movie_states.freezed.dart';
 
-// initial
-class MovieInitial extends MovieStates {}
-
-// loading
-class MovieLoading extends MovieStates {}
-
-// loaded
-class MovieLoaded extends MovieStates {
-  MovieLoaded({this.moviesByGenre});
-  final Map<MovieGenre, List<MediaContentModel>>? moviesByGenre;
-}
-
-// errors
-class MovieError extends MovieStates {
-  MovieError(this.message);
-  final String message;
+@freezed
+abstract class MovieStates with _$MovieStates {
+  const factory MovieStates.initial() = _Initial;
+  const factory MovieStates.loading() = _Loading;
+  const factory MovieStates.success({
+    final Map<MovieGenre, List<MediaContentModel>>? moviesByGenre,
+  }) = _Success;
+  const factory MovieStates.error(String message) = _Error;
 }

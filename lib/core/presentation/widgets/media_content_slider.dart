@@ -1,15 +1,19 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_model.dart';
-import 'package:flutter_intro_bootcamp_project/features/movie_details/presentation/screens/movie_details_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:movie_app/core/data/models/media_content_model.dart';
+import 'package:movie_app/core/presentation/app_router.dart';
 
 class MediaContentSlider extends StatelessWidget {
-  const MediaContentSlider({super.key, required this.list, required this.categoryTitle, required this.itemCount});
+  const MediaContentSlider({
+    super.key,
+    required this.list,
+    required this.categoryTitle,
+  });
 
   final List<MediaContentModel> list;
   final String categoryTitle;
-  final int itemCount;
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +26,11 @@ class MediaContentSlider extends StatelessWidget {
           child: ListView.builder(
             physics: BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
-            itemCount: itemCount,
+            itemCount: list.length,
             itemBuilder: (BuildContext context, int index) {
               final MediaContentModel mediaContent = list[index];
               return GestureDetector(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute<Widget>(builder: (BuildContext context) => MovieDetailsScreen(movieId: mediaContent.id)));
-                },
+                onTap: () => context.router.push(MovieDetailsRoute(movieId: mediaContent.id)),
                 child: Container(
                   decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary, borderRadius: BorderRadius.circular(10)),
                   margin: EdgeInsets.only(left: 13),
@@ -39,20 +41,18 @@ class MediaContentSlider extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                           child: CachedNetworkImage(
                             imageUrl: mediaContent.fullPosterPath ?? '',
-                            placeholder:
-                                (BuildContext context, String url) =>
-                                    Padding(padding: const EdgeInsets.all(50), child: Center(child: CircularProgressIndicator())),
-                            errorWidget:
-                                (BuildContext context, String url, Object error) => Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                                  child: Center(
-                                    child: Image.asset(
-                                      'assets/images/placeholder/placeholder-image.png',
-                                      color: Theme.of(context).colorScheme.primary,
-                                      width: 110,
-                                    ),
-                                  ),
+                            placeholder: (BuildContext context, String url) =>
+                                Padding(padding: const EdgeInsets.all(50), child: Center(child: CircularProgressIndicator())),
+                            errorWidget: (BuildContext context, String url, Object error) => Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                              child: Center(
+                                child: Image.asset(
+                                  'assets/images/placeholder/placeholder-image.png',
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 110,
                                 ),
+                              ),
+                            ),
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -67,9 +67,12 @@ class MediaContentSlider extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
                                   child: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.star, color: Colors.yellow, size: 15),
+                                      const Icon(Icons.star, color: Colors.amber, size: 15),
                                       SizedBox(width: 2),
-                                      Text(mediaContent.voteAverage!.toStringAsFixed(1)),
+                                      Text(
+                                        mediaContent.voteAverage!.toStringAsFixed(1),
+                                        style: GoogleFonts.poppins(color: Colors.white),
+                                      ),
                                     ],
                                   ),
                                 ),

@@ -1,6 +1,6 @@
-import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_model.dart';
-import 'package:flutter_intro_bootcamp_project/features/home/data/services/home_service.dart';
-import 'package:flutter_intro_bootcamp_project/features/home/domain/repositories/home_repo.dart';
+import 'package:movie_app/core/data/models/media_content_model.dart';
+import 'package:movie_app/features/home/data/services/home_service.dart';
+import 'package:movie_app/features/home/domain/repositories/home_repo.dart';
 
 class HomeRepoImpl implements HomeRepo {
   HomeRepoImpl(this.homeService);

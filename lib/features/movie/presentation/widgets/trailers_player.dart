@@ -24,16 +24,10 @@ class _TrailersPlayerState extends State<TrailersPlayer> {
   }
 
   @override
-  void dispose() {
-    _trailerController.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(0.0),
-      child: Column(children: <Widget>[AspectRatio(aspectRatio: 16 / 9, child: YoutubePlayer(controller: _trailerController))]),
+      child: Column(children: <Widget>[AspectRatio(aspectRatio: 5 / 3, child: YoutubePlayer(controller: _trailerController))]),
     );
   }
 }

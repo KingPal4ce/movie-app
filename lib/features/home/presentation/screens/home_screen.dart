@@ -1,12 +1,15 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_model.dart';
-import 'package:flutter_intro_bootcamp_project/core/presentation/widgets/media_content_slider.dart';
-import 'package:flutter_intro_bootcamp_project/features/home/domain/blocs/home_bloc.dart';
-import 'package:flutter_intro_bootcamp_project/features/home/domain/blocs/home_states.dart';
-import 'package:flutter_intro_bootcamp_project/features/movie_details/presentation/screens/movie_details_screen.dart';
+import 'package:movie_app/core/data/models/media_content_model.dart';
+import 'package:movie_app/core/presentation/app_router.dart';
+import 'package:movie_app/core/presentation/widgets/media_content_slider.dart';
+import 'package:movie_app/core/presentation/widgets/my_loading_indicator.dart';
+import 'package:movie_app/features/home/domain/blocs/home_bloc.dart';
+import 'package:movie_app/features/home/domain/blocs/home_states.dart';
 
+@RoutePage()
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -17,9 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late HomeBloc homeBloc;
   late List<MediaContentModel> trendingMovies;
-  late List<MediaContentModel> popularMovies;
-  late List<MediaContentModel> topRatedMovies;
-  late List<MediaContentModel> nowPlayingMovies;
   int selectedTrending = 1;
 
   @override
@@ -80,78 +80,93 @@ class _HomeScreenState extends State<HomeScreen> {
               collapseMode: CollapseMode.parallax,
               background: BlocBuilder<HomeBloc, HomeStates>(
                 builder: (BuildContext context, HomeStates state) {
-                  if (state is HomeLoading) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (state is HomeError) {
-                    return Center(child: Text("Error: ${state.message}"));
-                  } else if (state is HomeLoaded) {
-                    trendingMovies = selectedTrending == 1 ? state.trendingWeek : state.trendingDay;
+                  return state.maybeWhen(
+                    loading: () => const MyLoadingIndicator(),
+                    success: (
+                      List<MediaContentModel> trendingWeek,
+                      List<MediaContentModel> trendingDay,
+                      List<MediaContentModel> popularMovies,
+                      List<MediaContentModel> topRatedMovies,
+                      List<MediaContentModel> nowPlayingMovies,
+                    ) {
+                      trendingMovies = selectedTrending == 1 ? trendingWeek : trendingDay;
 
-                    if (trendingMovies.isEmpty) {
-                      return const Center(child: Text('No movies available'));
-                    }
-
-                    // Carousel with trending movies
-                    return CarouselSlider(
-                      items:
-                          trendingMovies.map((MediaContentModel media) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute<Widget>(builder: (BuildContext context) => MovieDetailsScreen(movieId: media.id)),
-                                    );
-                                  },
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        colorFilter: ColorFilter.mode(Colors.black.withValues(alpha: 0.3), BlendMode.darken),
-                                        image: NetworkImage('https://image.tmdb.org/t/p/w500${media.posterPath}'),
-                                        fit: BoxFit.fill,
-                                      ),
+                      // Carousel with trending movies
+                      return CarouselSlider(
+                        items: trendingMovies.map((MediaContentModel media) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return GestureDetector(
+                                onTap: () => context.router.push(MovieDetailsRoute(movieId: media.id)),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      colorFilter: ColorFilter.mode(Colors.black.withValues(alpha: 0.3), BlendMode.darken),
+                                      image: NetworkImage('https://image.tmdb.org/t/p/w500${media.posterPath}'),
+                                      fit: BoxFit.fill,
                                     ),
                                   ),
-                                );
-                              },
-                            );
-                          }).toList(),
-                      options: CarouselOptions(viewportFraction: 1, autoPlay: true, autoPlayInterval: Duration(seconds: 3), height: 450),
-                    );
-                  }
-
-                  return Center(child: Text('Something went Wrong'));
+                                ),
+                              );
+                            },
+                          );
+                        }).toList(),
+                        options: CarouselOptions(viewportFraction: 1, autoPlay: true, autoPlayInterval: Duration(seconds: 3), height: 450),
+                      );
+                    },
+                    error: (String message) => Center(child: Text("Error: $message")),
+                    orElse: () => Center(child: Text('Something went Wrong')),
+                  );
                 },
               ),
             ),
           ),
           // Movie Sliders
-          SliverToBoxAdapter(
-            child: BlocBuilder<HomeBloc, HomeStates>(
-              builder: (BuildContext context, HomeStates state) {
-                if (state is HomeLoading) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (state is HomeError) {
-                  return Center(child: Text("Error: ${state.message}"));
-                } else if (state is HomeLoaded) {
-                  nowPlayingMovies = state.nowPlayingMovies;
-                  popularMovies = state.popularMovies;
-                  topRatedMovies = state.topRatedMovies;
-
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      MediaContentSlider(list: nowPlayingMovies, categoryTitle: 'Now Playing', itemCount: nowPlayingMovies.length),
-                      MediaContentSlider(list: popularMovies, categoryTitle: 'Popular Movies', itemCount: popularMovies.length),
-                      MediaContentSlider(list: topRatedMovies, categoryTitle: 'Top Rated Movies', itemCount: topRatedMovies.length),
-                    ],
+          BlocBuilder<HomeBloc, HomeStates>(
+            builder: (BuildContext context, HomeStates state) {
+              return state.maybeWhen(
+                loading: () => const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: MyLoadingIndicator()),
+                ),
+                success: (
+                  List<MediaContentModel> trendingWeek,
+                  List<MediaContentModel> trendingDay,
+                  List<MediaContentModel> popularMovies,
+                  List<MediaContentModel> topRatedMovies,
+                  List<MediaContentModel> nowPlayingMovies,
+                ) {
+                  return SliverToBoxAdapter(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        MediaContentSlider(
+                          list: nowPlayingMovies,
+                          categoryTitle: 'Now Playing',
+                        ),
+                        MediaContentSlider(
+                          list: popularMovies,
+                          categoryTitle: 'Popular Movies',
+                        ),
+                        MediaContentSlider(
+                          list: topRatedMovies,
+                          categoryTitle: 'Top Rated Movies',
+                        ),
+                      ],
+                    ),
                   );
-                }
-                return Center(child: Text('Something went Wrong'));
-              },
-            ),
+                },
+                error: (String message) => SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: Text("Error: $message")),
+                ),
+                orElse: () => const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: Text('Something went wrong')),
+                ),
+              );
+            },
           ),
         ],
       ),

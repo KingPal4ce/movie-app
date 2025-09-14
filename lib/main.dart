@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_intro_bootcamp_project/app.dart';
+import 'package:movie_app/app.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {

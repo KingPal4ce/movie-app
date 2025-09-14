@@ -1,21 +1,14 @@
-import 'package:flutter_intro_bootcamp_project/features/search/data/models/media_content_search_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:movie_app/features/search/data/models/media_content_search_model.dart';
 
-abstract class SearchStates {}
+part 'search_states.freezed.dart';
 
-// initial
-class SearchInitial extends SearchStates {}
-
-// loading
-class SearchLoading extends SearchStates {}
-
-// loaded
-class SearchLoaded extends SearchStates {
-  SearchLoaded({this.searchData});
-  final List<MediaContentSearchModel>? searchData;
-}
-
-// errors
-class SearchError extends SearchStates {
-  SearchError(this.message);
-  final String message;
+@freezed
+abstract class SearchStates with _$SearchStates {
+  const factory SearchStates.initial() = _Initial;
+  const factory SearchStates.loading() = _Loading;
+  const factory SearchStates.success({
+    required final List<MediaContentSearchModel> searchData,
+  }) = _Success;
+  const factory SearchStates.error(String message) = _Error;
 }

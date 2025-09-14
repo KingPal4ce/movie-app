@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_model.dart';
-import 'package:flutter_intro_bootcamp_project/features/home/domain/blocs/home_states.dart';
-import 'package:flutter_intro_bootcamp_project/features/home/domain/repositories/home_repo.dart';
+import 'package:movie_app/core/data/models/media_content_model.dart';
+import 'package:movie_app/features/home/domain/blocs/home_states.dart';
+import 'package:movie_app/features/home/domain/repositories/home_repo.dart';
 
 class HomeBloc extends Cubit<HomeStates> {
-  HomeBloc({required this.homeRepo}) : super(HomeInitial());
+  HomeBloc({required this.homeRepo}) : super(HomeStates.initial());
 
   final HomeRepo homeRepo;
   late List<MediaContentModel> nowPlayingMovies;
@@ -15,14 +15,14 @@ class HomeBloc extends Cubit<HomeStates> {
 
   Future<void> fetchMovies() async {
     try {
-      emit(HomeLoading());
+      emit(HomeStates.loading());
       trendingWeek = await homeRepo.fetchTrendingWeek();
       trendingDay = await homeRepo.fetchTrendingDay();
       popularMovies = await homeRepo.fetchPopularMovies();
       topRatedMovies = await homeRepo.fetchTopRatedMovies();
       nowPlayingMovies = await homeRepo.fetchNowPlayingMovies();
       emit(
-        HomeLoaded(
+        HomeStates.success(
           trendingWeek: trendingWeek,
           trendingDay: trendingDay,
           popularMovies: popularMovies,
@@ -31,7 +31,7 @@ class HomeBloc extends Cubit<HomeStates> {
         ),
       );
     } catch (e) {
-      emit(HomeError('Failed to fetch movies: $e'));
+      emit(HomeStates.error('Failed to fetch movies: $e'));
     }
   }
 }

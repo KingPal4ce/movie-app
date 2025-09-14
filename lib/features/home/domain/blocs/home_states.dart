@@ -1,31 +1,18 @@
-import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:movie_app/core/data/models/media_content_model.dart';
 
-abstract class HomeStates {}
+part 'home_states.freezed.dart';
 
-// initial
-class HomeInitial extends HomeStates {}
-
-// loading
-class HomeLoading extends HomeStates {}
-
-// loaded
-class HomeLoaded extends HomeStates {
-  HomeLoaded({
-    required this.trendingWeek,
-    required this.trendingDay,
-    required this.popularMovies,
-    required this.topRatedMovies,
-    required this.nowPlayingMovies,
-  });
-  final List<MediaContentModel> trendingWeek;
-  final List<MediaContentModel> trendingDay;
-  final List<MediaContentModel> popularMovies;
-  final List<MediaContentModel> topRatedMovies;
-  final List<MediaContentModel> nowPlayingMovies;
-}
-
-// errors
-class HomeError extends HomeStates {
-  HomeError(this.message);
-  final String message;
+@freezed
+abstract class HomeStates with _$HomeStates {
+  const factory HomeStates.initial() = _Initial;
+  const factory HomeStates.loading() = _Loading;
+  const factory HomeStates.success({
+    required final List<MediaContentModel> trendingWeek,
+    required final List<MediaContentModel> trendingDay,
+    required final List<MediaContentModel> popularMovies,
+    required final List<MediaContentModel> topRatedMovies,
+    required final List<MediaContentModel> nowPlayingMovies,
+  }) = _Success;
+  const factory HomeStates.error(String message) = _Error;
 }

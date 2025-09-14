@@ -1,5 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_intro_bootcamp_project/features/auth/data/models/app_user.dart';
+import 'package:movie_app/features/auth/data/models/app_user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 

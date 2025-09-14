@@ -1,6 +1,6 @@
-import 'package:flutter_intro_bootcamp_project/features/search/data/models/media_content_search_model.dart';
-import 'package:flutter_intro_bootcamp_project/features/search/data/services/search_service.dart';
-import 'package:flutter_intro_bootcamp_project/features/search/domain/repositories/search_repo.dart';
+import 'package:movie_app/features/search/data/models/media_content_search_model.dart';
+import 'package:movie_app/features/search/data/services/search_service.dart';
+import 'package:movie_app/features/search/domain/repositories/search_repo.dart';
 
 class SearchRepoImpl implements SearchRepo {
   SearchRepoImpl({required this.searchService});

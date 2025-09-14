@@ -1,6 +1,6 @@
-import 'package:flutter_intro_bootcamp_project/features/auth/data/models/app_user.dart';
-import 'package:flutter_intro_bootcamp_project/features/auth/data/services/auth_service.dart';
-import 'package:flutter_intro_bootcamp_project/features/auth/domain/repositories/auth_repo.dart';
+import 'package:movie_app/features/auth/data/models/app_user.dart';
+import 'package:movie_app/features/auth/data/services/auth_service.dart';
+import 'package:movie_app/features/auth/domain/repositories/auth_repo.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepoImpl implements AuthRepo {

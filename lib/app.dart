@@ -1,32 +1,30 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_intro_bootcamp_project/core/data/api_dio_client.dart';
-import 'package:flutter_intro_bootcamp_project/core/presentation/themes/dark_mode.dart';
-import 'package:flutter_intro_bootcamp_project/core/presentation/themes/light_mode.dart';
-import 'package:flutter_intro_bootcamp_project/core/presentation/screens/navigation_screen.dart';
-import 'package:flutter_intro_bootcamp_project/features/auth/data/services/auth_service.dart';
-import 'package:flutter_intro_bootcamp_project/features/auth/domain/blocs/auth_bloc.dart';
-import 'package:flutter_intro_bootcamp_project/features/auth/domain/blocs/auth_states.dart';
-import 'package:flutter_intro_bootcamp_project/features/auth/domain/repositories/auth_repo.dart';
-import 'package:flutter_intro_bootcamp_project/features/auth/domain/repositories/auth_repo_impl.dart';
-import 'package:flutter_intro_bootcamp_project/features/auth/presentation/screens/auth.dart';
-import 'package:flutter_intro_bootcamp_project/features/home/data/services/home_service.dart';
-import 'package:flutter_intro_bootcamp_project/features/home/domain/blocs/home_bloc.dart';
-import 'package:flutter_intro_bootcamp_project/features/home/domain/repositories/home_repo.dart';
-import 'package:flutter_intro_bootcamp_project/features/home/domain/repositories/home_repo_impl.dart';
-import 'package:flutter_intro_bootcamp_project/features/movie/data/services/movie_service.dart';
-import 'package:flutter_intro_bootcamp_project/features/movie/domain/blocs/movie_bloc.dart';
-import 'package:flutter_intro_bootcamp_project/features/movie/domain/repositories/movie_repo.dart';
-import 'package:flutter_intro_bootcamp_project/features/movie/domain/repositories/movie_repo_impl.dart';
-import 'package:flutter_intro_bootcamp_project/features/movie_details/data/services/movie_details_service.dart';
-import 'package:flutter_intro_bootcamp_project/features/movie_details/domain/blocs/movie_details_bloc.dart';
-import 'package:flutter_intro_bootcamp_project/features/movie_details/domain/repositories/movie_details_repo.dart';
-import 'package:flutter_intro_bootcamp_project/features/movie_details/domain/repositories/movie_details_repo_impl.dart';
-import 'package:flutter_intro_bootcamp_project/features/search/data/services/search_service.dart';
-import 'package:flutter_intro_bootcamp_project/features/search/domain/blocs/search_bloc.dart';
-import 'package:flutter_intro_bootcamp_project/features/search/domain/repositories/search_repo.dart';
-import 'package:flutter_intro_bootcamp_project/features/search/domain/repositories/search_repo_impl.dart';
+import 'package:movie_app/core/data/api_dio_client.dart';
+import 'package:movie_app/core/presentation/app_router.dart';
+import 'package:movie_app/core/presentation/auth_guard.dart';
+import 'package:movie_app/core/presentation/themes/dark_mode.dart';
+import 'package:movie_app/core/presentation/themes/light_mode.dart';
+import 'package:movie_app/features/auth/data/services/auth_service.dart';
+import 'package:movie_app/features/auth/domain/blocs/auth_bloc.dart';
+import 'package:movie_app/features/auth/domain/repositories/auth_repo.dart';
+import 'package:movie_app/features/auth/domain/repositories/auth_repo_impl.dart';
+import 'package:movie_app/features/home/data/services/home_service.dart';
+import 'package:movie_app/features/home/domain/blocs/home_bloc.dart';
+import 'package:movie_app/features/home/domain/repositories/home_repo.dart';
+import 'package:movie_app/features/home/domain/repositories/home_repo_impl.dart';
+import 'package:movie_app/features/movie/data/services/movie_service.dart';
+import 'package:movie_app/features/movie/domain/blocs/movie_bloc.dart';
+import 'package:movie_app/features/movie/domain/blocs/movie_details_bloc.dart';
+import 'package:movie_app/features/movie/domain/repositories/movie_details_repo.dart';
+import 'package:movie_app/features/movie/domain/repositories/movie_details_repo_impl.dart';
+import 'package:movie_app/features/movie/domain/repositories/movie_repo.dart';
+import 'package:movie_app/features/movie/domain/repositories/movie_repo_impl.dart';
+import 'package:movie_app/features/search/data/services/search_service.dart';
+import 'package:movie_app/features/search/domain/blocs/search_bloc.dart';
+import 'package:movie_app/features/search/domain/repositories/search_repo.dart';
+import 'package:movie_app/features/search/domain/repositories/search_repo_impl.dart';
 import 'package:nested/nested.dart';
 
 class MyApp extends StatelessWidget {
@@ -34,6 +32,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthGuard authGuard = AuthGuard();
+    final AppRouter appRouter = AppRouter(authGuard: authGuard);
+
     final Dio dio = Dio();
     final ApiDioClient apiClient = ApiDioClient(dio);
 
@@ -45,9 +46,7 @@ class MyApp extends StatelessWidget {
 
     final MovieService movieService = MovieService(apiClient);
     final MovieRepo movieRepo = MovieRepoImpl(movieService);
-
-    final MovieDetailsService movieDetailsService = MovieDetailsService(apiClient);
-    final MovieDetailsRepo movieDetailsRepo = MovieDetailsRepoImpl(movieDetailsService);
+    final MovieDetailsRepo movieDetailsRepo = MovieDetailsRepoImpl(movieService);
 
     final SearchService searchService = SearchService(apiClient);
     final SearchRepo searchRepo = SearchRepoImpl(searchService: searchService);
@@ -69,39 +68,13 @@ class MyApp extends StatelessWidget {
         // Search BLoC
         BlocProvider<SearchBloc>(create: (BuildContext context) => SearchBloc(searchRepo: searchRepo)),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         theme: lightMode,
         darkTheme: darkMode,
         themeMode: ThemeMode.system,
         title: 'Movie App',
-        home: BlocConsumer<AuthBloc, AuthStates>(
-          builder: (BuildContext context, AuthStates state) {
-            // loading...
-            if (state is AuthLoading) {
-              return const Scaffold(body: Center(child: CircularProgressIndicator()));
-            }
-
-            // unauthenticated -> auth screen (login/register)
-            if (state is Unauthenticated) {
-              return const AuthScreen();
-            }
-
-            // authenticated -> home screen
-            if (state is Authenticated) {
-              return const NavigationScreen();
-            } else {
-              return const Scaffold(body: Center(child: Text('Something Went Wrong...')));
-            }
-          },
-
-          // listen for errors..
-          listener: (BuildContext context, AuthStates state) {
-            if (state is AuthError) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
-            }
-          },
-        ),
+        routerConfig: appRouter.config(),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_intro_bootcamp_project/features/movie_details/data/models/cast_member_model.dart';
+import 'package:movie_app/features/movie/data/models/cast_member_model.dart';
 
 class CastList extends StatelessWidget {
   const CastList({super.key, required this.castMember});
@@ -23,9 +23,8 @@ class CastList extends StatelessWidget {
               width: 80,
               fit: BoxFit.cover,
               placeholder: (BuildContext context, String url) => CircularProgressIndicator(),
-              errorWidget:
-                  (BuildContext context, String url, Object error) =>
-                      Container(decoration: BoxDecoration(color: Theme.of(context).colorScheme.tertiary), child: Icon(Icons.person, size: 80)),
+              errorWidget: (BuildContext context, String url, Object error) =>
+                  Container(decoration: BoxDecoration(color: Theme.of(context).colorScheme.tertiary), child: Icon(Icons.person, size: 80)),
             ),
           ),
           const SizedBox(height: 5),

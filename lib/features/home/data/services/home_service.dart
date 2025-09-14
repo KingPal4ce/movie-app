@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_intro_bootcamp_project/core/data/api_dio_client.dart';
-import 'package:flutter_intro_bootcamp_project/core/data/models/media_content_model.dart';
+import 'package:movie_app/core/data/api_dio_client.dart';
+import 'package:movie_app/core/data/models/media_content_model.dart';
 
 class HomeService {
   HomeService(this.apiClient);
